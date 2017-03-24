@@ -1,0 +1,24 @@
+# Setting facts
+- name: free memory
+  set_fact: memfree={{ ansible_memory_mb.nocache.free }}
+
+- name: init fact
+  set_fact:
+    promisc: []
+- name: add promisc interface to fact
+  set_fact: promisc="{{ promisc }} + [ '{{ item }}' ]"
+  with_items: "{{ ansible_interfaces }}"
+  when: "{{ hostvars[inventory_hostname]['ansible_' + item]['promisc'] }}"
+
+- name: check VPN
+  set_fact: vpn={{ 'tun0' in ansible_interfaces }}
+
+# Output values
+- name: print free memory
+  debug: msg={{ memfree }}
+- name: list of promisc interfaces
+  debug: msg={{ promisc }}
+- name: count of promisc interfaces
+  debug: msg={{ promisc|length }}
+- name: vpn is active
+  debug: msg={{ vpn }}

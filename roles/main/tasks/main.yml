@@ -1,0 +1,13 @@
+- name: memory dependend 1
+  file: name=/tmp/memory_huge state=touch
+  when: memfree|int >= 1024
+- name: memory dependend 2
+  file: name=/tmp/memory_small state=touch
+  when: memfree|int < 1024
+
+- name: vpn dependend 1
+  file: name=/tmp/vpn_up state=touch
+  when: vpn
+- name: vpn dependend 2
+  file: name=/tmp/vpn_down state=touch
+  when: not vpn
